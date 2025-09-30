@@ -81,7 +81,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const signUp = async (email: string, password: string, name: string) => {
+  const signUp = async (email: string, password: string, name: string, courseId?: string) => {
     try {
       setLoading(true);
       const redirectUrl = `${window.location.origin}/`;
@@ -93,6 +93,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           emailRedirectTo: redirectUrl,
           data: {
             full_name: name,
+            course_id: courseId,
           },
         },
       });

@@ -44,19 +44,7 @@ export const RegisterForm = () => {
   const onSubmit = async (data: RegisterFormData) => {
     try {
       setGeneralError('');
-      await signUp(data.email, data.password, data.name);
-      
-      // Get the newly created user
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (user) {
-        // Update profile with selected course
-        await supabase
-          .from('profiles')
-          .update({ course_id: data.courseId })
-          .eq('id', user.id);
-      }
-      
+      await signUp(data.email, data.password, data.name, data.courseId);
       navigate('/auth/login');
     } catch (error) {
       setGeneralError('Não foi possível criar a conta. Tente novamente.');

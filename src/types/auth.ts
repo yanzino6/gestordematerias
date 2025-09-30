@@ -28,7 +28,7 @@ export interface AuthContextValue extends AuthState {
    * Sign up a new user with email, password and name
    * @throws AuthError if registration fails
    */
-  signUp: (email: string, password: string, name: string) => Promise<void>;
+  signUp: (email: string, password: string, name: string, courseId?: string) => Promise<void>;
   
   /**
    * Sign out the current user
