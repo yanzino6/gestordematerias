@@ -88,7 +88,7 @@ export const useDisciplineStore = create<DisciplineStore>((set, get) => ({
       
       if (unmetPrerequisites.length > 0) {
         const prereqNames = unmetPrerequisites
-          .map(p => disciplines.find(d => d.id === p.prerequisite_id)?.code)
+          .map(p => disciplines.find(d => d.id === p.prerequisite_id)?.name)
           .filter(Boolean)
           .join(', ');
         return { 
