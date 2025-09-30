@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useDisciplineStore } from '@/stores/disciplineStore';
 import { DisciplineWithRelations, DisciplineStatus } from '@/types/discipline';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { UserMenu } from '@/components/UserMenu';
 import { DisciplineCard } from '@/components/DisciplineCard';
 import { PrerequisiteWarningDialog } from '@/components/PrerequisiteWarningDialog';
 import { DisciplineDetailsDialog } from '@/components/DisciplineDetailsDialog';
@@ -204,7 +205,10 @@ const Index = () => {
             <GraduationCap className="h-6 w-6" />
             <h1 className="text-xl font-bold">Monitoramento de Disciplinas</h1>
           </div>
-          <ThemeToggle />
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <UserMenu />
+          </div>
         </div>
       </header>
 
