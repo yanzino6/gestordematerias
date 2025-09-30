@@ -40,6 +40,7 @@ const Index = () => {
     open: boolean;
     discipline: DisciplineWithRelations | null;
   }>({ open: false, discipline: null });
+  const [activeTab, setActiveTab] = useState<'periods' | 'cursando' | 'optional'>('periods');
 
   useEffect(() => {
     loadDisciplines();
@@ -260,7 +261,7 @@ const Index = () => {
         </div>
 
         {/* Tabs */}
-        <Tabs value="periods" className="space-y-4">
+        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'periods' | 'cursando' | 'optional')} className="space-y-4">
           <TabsList>
             <TabsTrigger value="periods">Por Período</TabsTrigger>
             <TabsTrigger value="cursando">Cursando</TabsTrigger>
