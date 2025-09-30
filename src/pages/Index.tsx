@@ -191,6 +191,9 @@ const Index = () => {
   );
   
   const optionalDisciplines = filteredDisciplines.filter(d => d.is_optional);
+  const currentDisciplines = filteredDisciplines.filter(
+    d => d.user_discipline?.status === 'EM_ANDAMENTO'
+  );
   
   const progress = getProgress();
   const periodProgress = getPeriodProgress(selectedPeriod);
@@ -260,6 +263,7 @@ const Index = () => {
         <Tabs value="periods" className="space-y-4">
           <TabsList>
             <TabsTrigger value="periods">Por Período</TabsTrigger>
+            <TabsTrigger value="cursando">Cursando</TabsTrigger>
             <TabsTrigger value="optional">Optativas</TabsTrigger>
           </TabsList>
           
@@ -304,6 +308,36 @@ const Index = () => {
             ) : (
               <div className="text-center py-12 text-muted-foreground">
                 Nenhuma disciplina encontrada
+              </div>
+            )}
+          </TabsContent>
+          
+          <TabsContent value="cursando" className="space-y-4">
+            {loading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[...Array(6)].map((_, i) => (
+                  <Skeleton key={i} className="h-[250px]" />
+                ))}
+              </div>
+            ) : currentDisciplines.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {currentDisciplines.map((discipline) => {
+                  const { can, reason } = canStartDiscipline(discipline.id);
+                  return (
+                    <DisciplineCard
+                      key={discipline.id}
+                      discipline={discipline}
+                      onStatusChange={handleStatusChange}
+                      onViewDetails={(d) => setDetailsDialog({ open: true, discipline: d })}
+                      canStart={can}
+                      reason={reason}
+                    />
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-12 text-muted-foreground">
+                Você não está cursando nenhuma disciplina no momento
               </div>
             )}
           </TabsContent>
