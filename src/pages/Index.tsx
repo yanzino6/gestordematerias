@@ -158,7 +158,8 @@ const Index = () => {
 
       if (error) throw error;
 
-      updateDisciplineStatus(disciplineId, status, override);
+      // Reload disciplines to sync with database
+      await loadDisciplines();
       
       toast({
         title: 'Sucesso',
