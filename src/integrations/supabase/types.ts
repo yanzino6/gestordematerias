@@ -14,7 +14,149 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      corequisites: {
+        Row: {
+          corequisite_id: string
+          discipline_id: string
+          id: string
+        }
+        Insert: {
+          corequisite_id: string
+          discipline_id: string
+          id?: string
+        }
+        Update: {
+          corequisite_id?: string
+          discipline_id?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "corequisites_corequisite_id_fkey"
+            columns: ["corequisite_id"]
+            isOneToOne: false
+            referencedRelation: "disciplines"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "corequisites_discipline_id_fkey"
+            columns: ["discipline_id"]
+            isOneToOne: false
+            referencedRelation: "disciplines"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      disciplines: {
+        Row: {
+          code: string
+          created_at: string | null
+          credits: number
+          id: string
+          is_optional: boolean | null
+          name: string
+          period: number | null
+          workload: number
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          credits: number
+          id?: string
+          is_optional?: boolean | null
+          name: string
+          period?: number | null
+          workload: number
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          credits?: number
+          id?: string
+          is_optional?: boolean | null
+          name?: string
+          period?: number | null
+          workload?: number
+        }
+        Relationships: []
+      }
+      prerequisites: {
+        Row: {
+          discipline_id: string
+          id: string
+          prerequisite_id: string
+        }
+        Insert: {
+          discipline_id: string
+          id?: string
+          prerequisite_id: string
+        }
+        Update: {
+          discipline_id?: string
+          id?: string
+          prerequisite_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prerequisites_discipline_id_fkey"
+            columns: ["discipline_id"]
+            isOneToOne: false
+            referencedRelation: "disciplines"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prerequisites_prerequisite_id_fkey"
+            columns: ["prerequisite_id"]
+            isOneToOne: false
+            referencedRelation: "disciplines"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_disciplines: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          discipline_id: string
+          id: string
+          override_prerequisites: boolean | null
+          started_at: string | null
+          status: Database["public"]["Enums"]["discipline_status"] | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          discipline_id: string
+          id?: string
+          override_prerequisites?: boolean | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["discipline_status"] | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          discipline_id?: string
+          id?: string
+          override_prerequisites?: boolean | null
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["discipline_status"] | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_disciplines_discipline_id_fkey"
+            columns: ["discipline_id"]
+            isOneToOne: false
+            referencedRelation: "disciplines"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +165,11 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      discipline_status:
+        | "NAO_INICIADA"
+        | "EM_ANDAMENTO"
+        | "CONCLUIDA"
+        | "BLOQUEADA"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +296,13 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      discipline_status: [
+        "NAO_INICIADA",
+        "EM_ANDAMENTO",
+        "CONCLUIDA",
+        "BLOQUEADA",
+      ],
+    },
   },
 } as const
