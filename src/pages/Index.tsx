@@ -147,8 +147,8 @@ const Index = () => {
     override: boolean
   ) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      if (!currentUser) {
         toast({
           title: 'Erro',
           description: 'Você precisa estar autenticado',
@@ -158,7 +158,7 @@ const Index = () => {
       }
 
       const updateData: any = {
-        user_id: user.id,
+        user_id: currentUser.id,
         discipline_id: disciplineId,
         status,
         override_prerequisites: override,
