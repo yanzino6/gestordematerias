@@ -1,5 +1,6 @@
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { useProfile } from '@/hooks/useProfile';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,10 +11,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { LogOut } from 'lucide-react';
+import { LogOut, GraduationCap } from 'lucide-react';
 
 export const UserMenu = () => {
   const { user, signOut } = useAuth();
+  const { profile } = useProfile();
   const navigate = useNavigate();
 
   if (!user) return null;
@@ -50,8 +52,14 @@ export const UserMenu = () => {
         <DropdownMenuLabel>
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">
-              {user.user_metadata?.full_name || 'Usuário'}
+              {profile?.full_name || user?.email}
             </p>
+            {profile?.course && (
+              <p className="text-xs text-muted-foreground flex items-center gap-1">
+                <GraduationCap className="h-3 w-3" />
+                {profile.course.name}
+              </p>
+            )}
             <p className="text-xs leading-none text-muted-foreground">
               {user.email}
             </p>

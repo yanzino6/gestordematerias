@@ -8,6 +8,7 @@ export interface Discipline {
   workload: number;
   period: number | null;
   is_optional: boolean;
+  course_id: string | null;
   created_at?: string;
 }
 

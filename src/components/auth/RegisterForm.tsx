@@ -10,12 +10,15 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { User, Mail, Lock, Loader2 } from 'lucide-react';
+import { CourseSelector } from '@/components/CourseSelector';
+import { supabase } from '@/integrations/supabase/client';
 
 const registerSchema = z.object({
   name: z.string().min(2, 'O nome deve ter no mínimo 2 caracteres'),
   email: z.string().email('Email inválido'),
   password: z.string().min(6, 'A senha deve ter no mínimo 6 caracteres'),
   confirmPassword: z.string(),
+  courseId: z.string().min(1, 'Selecione um curso'),
 }).refine((data) => data.password === data.confirmPassword, {
   message: 'As senhas não correspondem',
   path: ['confirmPassword'],
@@ -31,6 +34,8 @@ export const RegisterForm = () => {
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
@@ -40,6 +45,18 @@ export const RegisterForm = () => {
     try {
       setGeneralError('');
       await signUp(data.email, data.password, data.name);
+      
+      // Get the newly created user
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (user) {
+        // Update profile with selected course
+        await supabase
+          .from('profiles')
+          .update({ course_id: data.courseId })
+          .eq('id', user.id);
+      }
+      
       navigate('/auth/login');
     } catch (error) {
       setGeneralError('Não foi possível criar a conta. Tente novamente.');
@@ -131,6 +148,12 @@ export const RegisterForm = () => {
               <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
             )}
           </div>
+
+          <CourseSelector
+            value={watch('courseId') || ''}
+            onValueChange={(value) => setValue('courseId', value)}
+            error={errors.courseId?.message}
+          />
         </CardContent>
 
         <CardFooter className="flex flex-col space-y-4">

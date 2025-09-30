@@ -47,9 +47,34 @@ export type Database = {
           },
         ]
       }
+      courses: {
+        Row: {
+          code: string
+          created_at: string | null
+          id: string
+          name: string
+          shift: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          id?: string
+          name: string
+          shift?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          id?: string
+          name?: string
+          shift?: string | null
+        }
+        Relationships: []
+      }
       disciplines: {
         Row: {
           code: string
+          course_id: string | null
           created_at: string | null
           credits: number
           id: string
@@ -60,6 +85,7 @@ export type Database = {
         }
         Insert: {
           code: string
+          course_id?: string | null
           created_at?: string | null
           credits: number
           id?: string
@@ -70,6 +96,7 @@ export type Database = {
         }
         Update: {
           code?: string
+          course_id?: string | null
           created_at?: string | null
           credits?: number
           id?: string
@@ -78,7 +105,15 @@ export type Database = {
           period?: number | null
           workload?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "disciplines_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       prerequisites: {
         Row: {
@@ -109,6 +144,38 @@ export type Database = {
             columns: ["prerequisite_id"]
             isOneToOne: false
             referencedRelation: "disciplines"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          course_id: string | null
+          created_at: string | null
+          full_name: string | null
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          course_id?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string | null
+        }
+        Update: {
+          course_id?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
             referencedColumns: ["id"]
           },
         ]

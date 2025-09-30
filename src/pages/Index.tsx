@@ -50,8 +50,22 @@ const Index = () => {
     try {
       setLoading(true);
       
-      // Load disciplines with prerequisites and corequisites
-      const { data: disciplinesData, error: disciplinesError } = await supabase
+      // Get user profile to filter by course
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      
+      if (!currentUser) {
+        setLoading(false);
+        return;
+      }
+
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('course_id')
+        .eq('id', currentUser.id)
+        .single();
+
+      // Build disciplines query
+      let disciplinesQuery = supabase
         .from('disciplines')
         .select(`
           *,
@@ -68,21 +82,24 @@ const Index = () => {
         `)
         .order('period', { ascending: true });
 
+      // Filter by course if user has one selected
+      if (profileData?.course_id) {
+        disciplinesQuery = disciplinesQuery.eq('course_id', profileData.course_id);
+      }
+
+      const { data: disciplinesData, error: disciplinesError } = await disciplinesQuery;
+
       if (disciplinesError) throw disciplinesError;
 
       // Load user progress
-      const { data: { user } } = await supabase.auth.getUser();
-      
       let userDisciplinesData = [];
-      if (user) {
-        const { data, error: userError } = await supabase
-          .from('user_disciplines')
-          .select('*')
-          .eq('user_id', user.id);
+      const { data, error: userError } = await supabase
+        .from('user_disciplines')
+        .select('*')
+        .eq('user_id', currentUser.id);
 
-        if (userError) throw userError;
-        userDisciplinesData = data || [];
-      }
+      if (userError) throw userError;
+      userDisciplinesData = data || [];
 
       // Merge data
       const mergedDisciplines = disciplinesData?.map((d: any) => ({
