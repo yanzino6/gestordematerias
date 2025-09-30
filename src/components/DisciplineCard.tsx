@@ -67,11 +67,11 @@ export function DisciplineCard({
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
-            <CardTitle className="text-base font-semibold truncate">
-              {discipline.code}
-            </CardTitle>
-            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+            <CardTitle className="text-base font-semibold line-clamp-2">
               {discipline.name}
+            </CardTitle>
+            <p className="text-xs text-muted-foreground mt-1">
+              {discipline.code}
             </p>
           </div>
           <div className="flex items-center gap-1">
@@ -99,7 +99,7 @@ export function DisciplineCard({
                 <div className="space-y-1">
                   {discipline.prerequisites.map((p) => (
                     <div key={p.id} className="text-xs">
-                      {p.prerequisite?.code}
+                      {p.prerequisite?.name}
                     </div>
                   ))}
                 </div>
@@ -118,7 +118,7 @@ export function DisciplineCard({
                 <div className="space-y-1">
                   {discipline.corequisites.map((c) => (
                     <div key={c.id} className="text-xs">
-                      {c.corequisite?.code}
+                      {c.corequisite?.name}
                     </div>
                   ))}
                 </div>

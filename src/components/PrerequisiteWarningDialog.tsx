@@ -33,7 +33,7 @@ export function PrerequisiteWarningDialog({
           <AlertDialogDescription className="space-y-2">
             <p>
               Você ainda não cumpre os requisitos para realizar a disciplina{' '}
-              <strong>{discipline?.code} - {discipline?.name}</strong>.
+              <strong>{discipline?.name} ({discipline?.code})</strong>.
             </p>
             <p className="text-destructive font-medium">{reason}</p>
             <p>Deseja marcar como "Cursando" mesmo assim?</p>
